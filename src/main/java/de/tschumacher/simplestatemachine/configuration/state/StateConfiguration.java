@@ -15,13 +15,13 @@ package de.tschumacher.simplestatemachine.configuration.state;
 
 import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandler;
 
-public interface StateConfiguration<State> {
+public interface StateConfiguration<State, Context> {
 
-  StateConfiguration<State> permit(State state);
+  StateConfiguration<State, Context> permit(State state);
 
-  StateConfiguration<State> permit(State state, StateChangeHandler handler);
+  StateConfiguration<State, Context> permit(State state, StateChangeHandler<Context> handler);
 
-  StateChangeHandler handler(State state);
+  StateChangeHandler<Context> handler(State state);
 
   boolean transitionAllowed(State state);
 

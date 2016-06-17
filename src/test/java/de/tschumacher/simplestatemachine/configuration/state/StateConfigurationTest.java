@@ -1,11 +1,11 @@
 /*
  * Copyright 2016 Tobias Schumacher
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -27,11 +27,11 @@ import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandle
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class StateConfigurationTest {
-  private StateConfiguration<TestState> service = null;
+  private StateConfiguration<TestState, String> service = null;
 
   @Before
   public void setUp() {
-    this.service = new DefaultStateConfiguration<TestState>();
+    this.service = new DefaultStateConfiguration<TestState, String>();
   }
 
   @Test
@@ -49,10 +49,11 @@ public class StateConfigurationTest {
     assertFalse(this.service.transitionAllowed(state));
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void transitionAllowedWithHandlerTest() {
     final TestState state = TestState.A;
-    final StateChangeHandler handler = Mockito.mock(StateChangeHandler.class);
+    final StateChangeHandler<String> handler = Mockito.mock(StateChangeHandler.class);
     this.service.permit(state, handler);
     assertTrue(this.service.transitionAllowed(state));
   }
@@ -64,12 +65,13 @@ public class StateConfigurationTest {
     assertNull(this.service.handler(state));
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void handlerAvailableTest() {
     final TestState state = TestState.A;
-    final StateChangeHandler handler = Mockito.mock(StateChangeHandler.class);
+    final StateChangeHandler<String> handler = Mockito.mock(StateChangeHandler.class);
     this.service.permit(state, handler);
-    final StateChangeHandler fetchedHandler = this.service.handler(state);
+    final StateChangeHandler<String> fetchedHandler = this.service.handler(state);
     assertNotNull(fetchedHandler);
     assertEquals(handler, fetchedHandler);
   }

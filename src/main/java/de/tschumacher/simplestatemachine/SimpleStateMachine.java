@@ -13,8 +13,10 @@
  */
 package de.tschumacher.simplestatemachine;
 
-public interface SimpleStateMachine<State> {
+public interface SimpleStateMachine<State, Context> {
 
   void change(State newState);
+
+  void change(State newState, Context context);
 
 }

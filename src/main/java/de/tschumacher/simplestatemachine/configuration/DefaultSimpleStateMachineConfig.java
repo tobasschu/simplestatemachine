@@ -19,24 +19,26 @@ import java.util.Map;
 import de.tschumacher.simplestatemachine.configuration.state.DefaultStateConfiguration;
 import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
 
-public class DefaultSimpleStateMachineConfig<State> implements SimpleStateMachineConfig<State> {
-  Map<State, StateConfiguration<State>> configuration =
-      new HashMap<State, StateConfiguration<State>>();
+public class DefaultSimpleStateMachineConfig<State, Context> implements
+SimpleStateMachineConfig<State, Context> {
+  Map<State, StateConfiguration<State, Context>> configuration =
+      new HashMap<State, StateConfiguration<State, Context>>();
 
 
   @Override
-  public StateConfiguration<State> configure(State state) {
+  public StateConfiguration<State, Context> configure(State state) {
     if (fetch(state) != null)
       return fetch(state);
 
-    final StateConfiguration<State> stateConfig = new DefaultStateConfiguration<State>();
+    final StateConfiguration<State, Context> stateConfig =
+        new DefaultStateConfiguration<State, Context>();
     this.configuration.put(state, stateConfig);
     return stateConfig;
   }
 
 
   @Override
-  public StateConfiguration<State> fetch(State state) {
+  public StateConfiguration<State, Context> fetch(State state) {
     return this.configuration.get(state);
   }
 
