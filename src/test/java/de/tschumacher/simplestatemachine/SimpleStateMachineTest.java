@@ -19,9 +19,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import de.tschumacher.simplestatemachine.configuration.SimpleStateMachineConfig;
-import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandler;
 import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
 import de.tschumacher.simplestatemachine.exception.TransitionNotAllowedException;
+import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class SimpleStateMachineTest {

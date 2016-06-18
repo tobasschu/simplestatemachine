@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandler;
+import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class StateConfigurationTest {

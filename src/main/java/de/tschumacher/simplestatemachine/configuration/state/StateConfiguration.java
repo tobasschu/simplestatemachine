@@ -13,7 +13,7 @@
  */
 package de.tschumacher.simplestatemachine.configuration.state;
 
-import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandler;
+import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
 
 public interface StateConfiguration<State, Context> {
 

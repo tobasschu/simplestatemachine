@@ -21,8 +21,8 @@ import de.tschumacher.simplestatemachine.DefaultSimpleStateMachine;
 import de.tschumacher.simplestatemachine.SimpleStateMachine;
 import de.tschumacher.simplestatemachine.configuration.DefaultSimpleStateMachineConfig;
 import de.tschumacher.simplestatemachine.configuration.SimpleStateMachineConfig;
-import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandler;
 import de.tschumacher.simplestatemachine.exception.TransitionNotAllowedException;
+import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class SimpleStateMachineIntegrationTest {

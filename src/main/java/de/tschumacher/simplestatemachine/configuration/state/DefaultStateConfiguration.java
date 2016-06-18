@@ -16,7 +16,7 @@ package de.tschumacher.simplestatemachine.configuration.state;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.tschumacher.simplestatemachine.configuration.handler.StateChangeHandler;
+import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
 
 public class DefaultStateConfiguration<State, Context> implements
 StateConfiguration<State, Context> {
