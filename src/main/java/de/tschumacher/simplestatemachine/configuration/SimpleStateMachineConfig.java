@@ -13,14 +13,16 @@
  */
 package de.tschumacher.simplestatemachine.configuration;
 
+import de.tschumacher.simplestatemachine.SimpleStateMachine;
 import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
 
 
 
-public interface SimpleStateMachineConfig<State, Context> {
+public interface SimpleStateMachineConfig<State, Context, ContextService> {
 
-  StateConfiguration<State, Context> configure(State state);
+  StateConfiguration<State, Context, ContextService> configure(State state);
 
-  StateConfiguration<State, Context> fetch(State state);
+  StateConfiguration<State, Context, ContextService> fetch(State state);
 
+  SimpleStateMachine<State, Context, ContextService> createMachine(State state);
 }

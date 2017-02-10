@@ -13,10 +13,12 @@
  */
 package de.tschumacher.simplestatemachine;
 
-public interface SimpleStateMachine<State, Context> {
+public interface SimpleStateMachine<State, Context, ContextService> {
 
   Context change(State newState);
 
   Context change(State newState, Context context);
+
+  Context change(State newState, Context context, ContextService contextService);
 
 }

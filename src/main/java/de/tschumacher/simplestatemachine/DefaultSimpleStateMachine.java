@@ -18,14 +18,14 @@ import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
 import de.tschumacher.simplestatemachine.exception.TransitionNotAllowedException;
 import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
 
-public class DefaultSimpleStateMachine<State, Context> implements
-    SimpleStateMachine<State, Context> {
+public class DefaultSimpleStateMachine<State, Context, ContextService> implements
+    SimpleStateMachine<State, Context, ContextService> {
 
-  private final SimpleStateMachineConfig<State, Context> config;
+  private final SimpleStateMachineConfig<State, Context, ContextService> config;
   private State actualState;
 
 
-  public DefaultSimpleStateMachine(SimpleStateMachineConfig<State, Context> config,
+  public DefaultSimpleStateMachine(SimpleStateMachineConfig<State, Context, ContextService> config,
       State actualState) {
     super();
     this.config = config;
@@ -34,23 +34,29 @@ public class DefaultSimpleStateMachine<State, Context> implements
 
 
   @Override
-  public Context change(State newState, Context context) {
-    final StateConfiguration<State, Context> actualStateConfig =
+  public Context change(State newState, Context context, ContextService contextService) {
+    final StateConfiguration<State, Context, ContextService> actualStateConfig =
         this.config.fetch(this.actualState);
     if (actualStateConfig == null || !actualStateConfig.transitionAllowed(newState))
       throw new TransitionNotAllowedException();
 
     this.actualState = newState;
-    final StateChangeHandler<Context> handler = actualStateConfig.handler(newState);
+    final StateChangeHandler<Context, ContextService> handler = actualStateConfig.handler(newState);
     if (handler != null)
-      return handler.handle(context);
+      return handler.handle(context, contextService);
 
-    return null;
+    return context;
   }
 
 
   @Override
   public Context change(State newState) {
-    return change(newState, null);
+    return change(newState, null, null);
+  }
+
+
+  @Override
+  public Context change(State newState, Context context) {
+    return change(newState, context, null);
   }
 }
