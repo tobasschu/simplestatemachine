@@ -13,8 +13,10 @@
  */
 package de.tschumacher.simplestatemachine;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -157,7 +159,7 @@ public class SimpleStateMachineTest {
 
   @Test(expected = TransitionNotAllowedException.class)
   @SuppressWarnings("unchecked")
-  public void transitionNotAllowedTest() {
+  public void changeTransitionNotAllowedTest() {
     final TestState newState = TestState.B;
     final StateConfiguration<TestState, String, StringService> stateConfig =
         Mockito.mock(StateConfiguration.class);
@@ -171,5 +173,49 @@ public class SimpleStateMachineTest {
       Mockito.verify(this.config).fetch(this.actualState);
       Mockito.verify(stateConfig).transitionAllowed(newState);
     }
+  }
+
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void transitionAllowedTest() {
+    final TestState newState = TestState.B;
+    final StateConfiguration<TestState, String, StringService> stateConfig =
+        Mockito.mock(StateConfiguration.class);
+    Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
+    Mockito.when(stateConfig.transitionAllowed(newState)).thenReturn(true);
+
+    final boolean allowed = this.service.transitionAllowed(newState);
+    assertTrue(allowed);
+
+    Mockito.verify(this.config).fetch(this.actualState);
+    Mockito.verify(stateConfig).transitionAllowed(newState);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void transitionNotAllowedTest() {
+    final TestState newState = TestState.B;
+    final StateConfiguration<TestState, String, StringService> stateConfig =
+        Mockito.mock(StateConfiguration.class);
+    Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
+    Mockito.when(stateConfig.transitionAllowed(newState)).thenReturn(false);
+
+    final boolean allowed = this.service.transitionAllowed(newState);
+    assertFalse(allowed);
+
+    Mockito.verify(this.config).fetch(this.actualState);
+    Mockito.verify(stateConfig).transitionAllowed(newState);
+  }
+
+
+  @Test
+  public void transitionNotConfiguredTest() {
+    final TestState newState = TestState.B;
+
+    final boolean allowed = this.service.transitionAllowed(newState);
+    assertFalse(allowed);
+
+    Mockito.verify(this.config).fetch(this.actualState);
   }
 }

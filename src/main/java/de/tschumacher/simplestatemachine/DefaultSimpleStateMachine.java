@@ -59,4 +59,11 @@ public class DefaultSimpleStateMachine<State, Context, ContextService> implement
   public Context change(State newState, Context context) {
     return change(newState, context, null);
   }
+
+  @Override
+  public boolean transitionAllowed(State newState) {
+    final StateConfiguration<State, Context, ContextService> actualStateConfig =
+        this.config.fetch(this.actualState);
+    return actualStateConfig != null && actualStateConfig.transitionAllowed(newState);
+  }
 }
