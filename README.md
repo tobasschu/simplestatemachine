@@ -1,3 +1,3 @@
-### BucketService (Amazon S3 Wrapper)
+### Simple State Machine
 -------------
-Uploading and Downloading files from S3
+A Simple State Machine Implementation
