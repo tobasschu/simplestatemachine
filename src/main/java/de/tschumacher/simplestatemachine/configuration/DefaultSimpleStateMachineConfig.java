@@ -21,33 +21,33 @@ import de.tschumacher.simplestatemachine.SimpleStateMachine;
 import de.tschumacher.simplestatemachine.configuration.state.DefaultStateConfiguration;
 import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
 
-public class DefaultSimpleStateMachineConfig<State, Context, ContextService> implements
-SimpleStateMachineConfig<State, Context, ContextService> {
-  Map<State, StateConfiguration<State, Context, ContextService>> configuration =
-      new HashMap<State, StateConfiguration<State, Context, ContextService>>();
+public class DefaultSimpleStateMachineConfig<State, Context>
+    implements SimpleStateMachineConfig<State, Context> {
+  Map<State, StateConfiguration<State, Context>> configuration =
+      new HashMap<>();
 
 
   @Override
-  public StateConfiguration<State, Context, ContextService> configure(State state) {
+  public StateConfiguration<State, Context> configure(State state) {
     if (fetch(state) != null)
       return fetch(state);
 
-    final StateConfiguration<State, Context, ContextService> stateConfig =
-        new DefaultStateConfiguration<State, Context, ContextService>();
+    final StateConfiguration<State, Context> stateConfig =
+        new DefaultStateConfiguration<>();
     this.configuration.put(state, stateConfig);
     return stateConfig;
   }
 
 
   @Override
-  public StateConfiguration<State, Context, ContextService> fetch(State state) {
+  public StateConfiguration<State, Context> fetch(State state) {
     return this.configuration.get(state);
   }
 
 
   @Override
-  public SimpleStateMachine<State, Context, ContextService> createMachine(State state) {
-    return new DefaultSimpleStateMachine<State, Context, ContextService>(this, state);
+  public SimpleStateMachine<State, Context> createMachine(State state) {
+    return new DefaultSimpleStateMachine<State, Context>(this, state);
   }
 
 

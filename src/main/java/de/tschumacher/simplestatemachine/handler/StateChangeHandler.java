@@ -13,8 +13,10 @@
  */
 package de.tschumacher.simplestatemachine.handler;
 
-public interface StateChangeHandler<Context, ContextService> {
+import de.tschumacher.simplestatemachine.domain.StateChange;
 
-  Context handle(Context context, ContextService contextService);
+public interface StateChangeHandler<State, Context> {
+
+  Context handle(StateChange<State> stateChange, Context context);
 
 }

@@ -13,26 +13,21 @@
  */
 package de.tschumacher.simplestatemachine.configuration.state;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
-import de.tschumacher.simplestatemachine.state.StringService;
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class StateConfigurationTest {
-  private StateConfiguration<TestState, String, StringService> service = null;
+  private StateConfiguration<TestState, String> service = null;
 
   @Before
   public void setUp() {
-    this.service = new DefaultStateConfiguration<TestState, String, StringService>();
+    this.service = new DefaultStateConfiguration<>();
   }
 
   @Test
@@ -54,8 +49,7 @@ public class StateConfigurationTest {
   @Test
   public void transitionAllowedWithHandlerTest() {
     final TestState state = TestState.A;
-    final StateChangeHandler<String, StringService> handler =
-        Mockito.mock(StateChangeHandler.class);
+    final StateChangeHandler<TestState, String> handler = Mockito.mock(StateChangeHandler.class);
     this.service.permit(state, handler);
     assertTrue(this.service.transitionAllowed(state));
   }
@@ -71,10 +65,9 @@ public class StateConfigurationTest {
   @Test
   public void handlerAvailableTest() {
     final TestState state = TestState.A;
-    final StateChangeHandler<String, StringService> handler =
-        Mockito.mock(StateChangeHandler.class);
+    final StateChangeHandler<TestState, String> handler = Mockito.mock(StateChangeHandler.class);
     this.service.permit(state, handler);
-    final StateChangeHandler<String, StringService> fetchedHandler = this.service.handler(state);
+    final StateChangeHandler<TestState, String> fetchedHandler = this.service.handler(state);
     assertNotNull(fetchedHandler);
     assertEquals(handler, fetchedHandler);
   }

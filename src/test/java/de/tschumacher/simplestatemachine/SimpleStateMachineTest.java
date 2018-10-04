@@ -13,35 +13,31 @@
  */
 package de.tschumacher.simplestatemachine;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import de.tschumacher.simplestatemachine.configuration.SimpleStateMachineConfig;
 import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
+import de.tschumacher.simplestatemachine.domain.StateChange;
 import de.tschumacher.simplestatemachine.exception.TransitionNotAllowedException;
 import de.tschumacher.simplestatemachine.handler.StateChangeHandler;
-import de.tschumacher.simplestatemachine.state.StringService;
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class SimpleStateMachineTest {
-  private SimpleStateMachine<TestState, String, StringService> service = null;
-  private SimpleStateMachineConfig<TestState, String, StringService> config;
+  private SimpleStateMachine<TestState, String> service = null;
+  private SimpleStateMachineConfig<TestState, String> config;
   private final TestState actualState = TestState.A;
 
   @SuppressWarnings("unchecked")
   @Before
   public void setUp() {
     this.config = Mockito.mock(SimpleStateMachineConfig.class);
-    this.service =
-        new DefaultSimpleStateMachine<TestState, String, StringService>(this.config,
-            this.actualState);
+    this.service = new DefaultSimpleStateMachine<>(this.config, this.actualState);
   }
 
   @After
@@ -53,9 +49,8 @@ public class SimpleStateMachineTest {
   @SuppressWarnings("unchecked")
   public void simpleTransitionTest() {
     final TestState newState = TestState.B;
-    final StateChangeHandler<String, StringService> handler =
-        Mockito.mock(StateChangeHandler.class);
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateChangeHandler<TestState, String> handler = Mockito.mock(StateChangeHandler.class);
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.handler(newState)).thenReturn(handler);
@@ -67,7 +62,7 @@ public class SimpleStateMachineTest {
     Mockito.verify(this.config).fetch(this.actualState);
     Mockito.verify(stateConfig).handler(newState);
     Mockito.verify(stateConfig).transitionAllowed(newState);
-    Mockito.verify(handler).handle(null, null);
+    Mockito.verify(handler).handle(Matchers.any(StateChange.class), Matchers.isNull(String.class));
   }
 
   @Test
@@ -75,10 +70,10 @@ public class SimpleStateMachineTest {
   public void simpleTransitionWithContextTest() {
     final String context = "context";
     final TestState newState = TestState.B;
-    final StateChangeHandler<String, StringService> handler =
-        Mockito.mock(StateChangeHandler.class);
-    Mockito.when(handler.handle(context, null)).thenReturn(context);
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateChangeHandler<TestState, String> handler = Mockito.mock(StateChangeHandler.class);
+    Mockito.when(handler.handle(Matchers.any(StateChange.class), Matchers.eq(context)))
+        .thenReturn(context);
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.handler(newState)).thenReturn(handler);
@@ -91,7 +86,7 @@ public class SimpleStateMachineTest {
     Mockito.verify(this.config).fetch(this.actualState);
     Mockito.verify(stateConfig).handler(newState);
     Mockito.verify(stateConfig).transitionAllowed(newState);
-    Mockito.verify(handler).handle(context, null);
+    Mockito.verify(handler).handle(Matchers.any(StateChange.class), Matchers.eq(context));
   }
 
   @Test
@@ -99,7 +94,7 @@ public class SimpleStateMachineTest {
   public void simpleTransitionWithoutHandlerTest() {
     final String context = "context";
     final TestState newState = TestState.B;
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.handler(newState)).thenReturn(null);
@@ -114,36 +109,12 @@ public class SimpleStateMachineTest {
     Mockito.verify(stateConfig).transitionAllowed(newState);
   }
 
-  @Test
-  @SuppressWarnings("unchecked")
-  public void simpleTransitionWithContextAndServiceTest() {
-    final String context = "context";
-    final StringService contextService = new StringService();
-    final TestState newState = TestState.B;
-    final StateChangeHandler<String, StringService> handler =
-        Mockito.mock(StateChangeHandler.class);
-    Mockito.when(handler.handle(context, contextService)).thenReturn(context);
-    final StateConfiguration<TestState, String, StringService> stateConfig =
-        Mockito.mock(StateConfiguration.class);
-    Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
-    Mockito.when(stateConfig.handler(newState)).thenReturn(handler);
-    Mockito.when(stateConfig.transitionAllowed(newState)).thenReturn(true);
-
-    final String change = this.service.change(newState, context, contextService);
-
-    assertNotNull(change);
-
-    Mockito.verify(this.config).fetch(this.actualState);
-    Mockito.verify(stateConfig).handler(newState);
-    Mockito.verify(stateConfig).transitionAllowed(newState);
-    Mockito.verify(handler).handle(context, contextService);
-  }
 
   @Test
   @SuppressWarnings("unchecked")
   public void transitionWithoutHandlerTest() {
     final TestState newState = TestState.B;
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.handler(newState)).thenReturn(null);
@@ -161,7 +132,7 @@ public class SimpleStateMachineTest {
   @SuppressWarnings("unchecked")
   public void changeTransitionNotAllowedTest() {
     final TestState newState = TestState.B;
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.transitionAllowed(newState)).thenReturn(false);
@@ -180,7 +151,7 @@ public class SimpleStateMachineTest {
   @SuppressWarnings("unchecked")
   public void transitionAllowedTest() {
     final TestState newState = TestState.B;
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.transitionAllowed(newState)).thenReturn(true);
@@ -196,7 +167,7 @@ public class SimpleStateMachineTest {
   @SuppressWarnings("unchecked")
   public void transitionNotAllowedTest() {
     final TestState newState = TestState.B;
-    final StateConfiguration<TestState, String, StringService> stateConfig =
+    final StateConfiguration<TestState, String> stateConfig =
         Mockito.mock(StateConfiguration.class);
     Mockito.when(this.config.fetch(this.actualState)).thenReturn(stateConfig);
     Mockito.when(stateConfig.transitionAllowed(newState)).thenReturn(false);

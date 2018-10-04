@@ -13,31 +13,27 @@
  */
 package de.tschumacher.simplestatemachine.configuration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.tschumacher.simplestatemachine.SimpleStateMachine;
 import de.tschumacher.simplestatemachine.configuration.state.StateConfiguration;
-import de.tschumacher.simplestatemachine.state.StringService;
 import de.tschumacher.simplestatemachine.state.TestState;
 
 public class SimpleStateMachineConfigTest {
-  private SimpleStateMachineConfig<TestState, String, StringService> service = null;
+  private SimpleStateMachineConfig<TestState, String> service = null;
 
   @Before
   public void setUp() {
-    this.service = new DefaultSimpleStateMachineConfig<TestState, String, StringService>();
+    this.service = new DefaultSimpleStateMachineConfig<>();
   }
 
   @Test
   public void configureNotNullTest() {
     final TestState state = TestState.A;
-    final StateConfiguration<TestState, String, StringService> configure =
-        this.service.configure(state);
+    final StateConfiguration<TestState, String> configure = this.service.configure(state);
 
     assertNotNull(configure);
   }
@@ -45,9 +41,8 @@ public class SimpleStateMachineConfigTest {
   @Test
   public void configurationAreEqualTest() {
     final TestState state = TestState.A;
-    final StateConfiguration<TestState, String, StringService> configure =
-        this.service.configure(state);
-    final StateConfiguration<TestState, String, StringService> fetch = this.service.fetch(state);
+    final StateConfiguration<TestState, String> configure = this.service.configure(state);
+    final StateConfiguration<TestState, String> fetch = this.service.fetch(state);
     assertEquals(configure, fetch);
   }
 
@@ -55,7 +50,7 @@ public class SimpleStateMachineConfigTest {
   @Test
   public void fetchNotConfiguredTest() {
     final TestState state = TestState.A;
-    final StateConfiguration<TestState, String, StringService> fetch = this.service.fetch(state);
+    final StateConfiguration<TestState, String> fetch = this.service.fetch(state);
     assertNull(fetch);
   }
 
@@ -63,8 +58,7 @@ public class SimpleStateMachineConfigTest {
   @Test
   public void createMachineTest() {
     final TestState state = TestState.A;
-    final SimpleStateMachine<TestState, String, StringService> machine =
-        this.service.createMachine(state);
+    final SimpleStateMachine<TestState, String> machine = this.service.createMachine(state);
     assertNotNull(machine);
   }
 }
